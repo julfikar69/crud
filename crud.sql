@@ -14,26 +14,68 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
+-- Dumping database structure for pendataan_keuangan
+CREATE DATABASE IF NOT EXISTS `pendataan_keuangan` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `pendataan_keuangan`;
+
+-- Dumping structure for table pendataan_keuangan.kategori
+CREATE TABLE IF NOT EXISTS `kategori` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kategori` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tipe` enum('pendapatan','pengeluaran') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Dumping data for table pendataan_keuangan.kategori: ~5 rows (approximately)
 INSERT INTO `kategori` (`id`, `kategori`, `tipe`, `created_at`, `updated_at`) VALUES
-	(1, 'kendaraan', 'pengeluaran', '2023-05-25 10:20:31', '2023-05-25 10:20:27'),
-	(2, 'makanan', 'pengeluaran', '2023-05-25 10:20:23', '2023-05-25 10:20:21'),
-	(3, 'gadget', 'pengeluaran', '2023-05-25 10:20:28', '2023-05-25 10:20:30'),
-	(4, 'gaji', 'pendapatan', '2023-05-25 10:20:26', '2023-05-25 10:20:22');
+	(1, 'kendaraan', 'pengeluaran', NULL, NULL),
+	(2, 'makanan', 'pengeluaran', NULL, NULL),
+	(3, 'gadget', 'pengeluaran', NULL, NULL),
+	(4, 'gaji', 'pendapatan', NULL, NULL),
+	(5, 'kiriman', 'pendapatan', NULL, NULL);
+
+-- Dumping structure for table pendataan_keuangan.rekening
+CREATE TABLE IF NOT EXISTS `rekening` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `rekening` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table pendataan_keuangan.rekening: ~5 rows (approximately)
 INSERT INTO `rekening` (`id`, `rekening`, `created_at`, `updated_at`) VALUES
-	(1, 'BNI', '2023-05-25 08:44:50', '2023-05-25 13:52:56'),
-	(2, 'Mandiri', '2023-05-25 08:44:52', '2023-05-25 13:53:01'),
-	(3, 'Dompet', '2023-05-25 08:44:53', '2023-05-25 13:53:07'),
-	(4, 'LinkAja', '2023-05-25 08:44:54', '2023-05-25 13:53:15'),
-	(5, 'Gopay', '2023-05-25 08:44:55', '2023-05-25 13:52:51');
+	(1, 'BNI', NULL, NULL),
+	(2, 'ShoppePay', NULL, NULL),
+	(3, 'Gopay', NULL, NULL),
+	(4, 'Dompet', NULL, NULL),
+	(5, 'LinkAja', NULL, NULL);
 
--- Dumping data for table pendataan_keuangan.transaksi: ~0 rows (approximately)
+-- Dumping structure for table pendataan_keuangan.transaksi
+CREATE TABLE IF NOT EXISTS `transaksi` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `kategori_id` bigint unsigned NOT NULL,
+  `rekening_id` bigint unsigned NOT NULL,
+  `jumlah` int NOT NULL,
+  `keterangan` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal` datetime NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `transaksi_rekening_id_foreign` (`rekening_id`),
+  KEY `transaksi_kategori_id_foreign` (`kategori_id`),
+  CONSTRAINT `transaksi_kategori_id_foreign` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`),
+  CONSTRAINT `transaksi_rekening_id_foreign` FOREIGN KEY (`rekening_id`) REFERENCES `rekening` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table pendataan_keuangan.transaksi: ~3 rows (approximately)
 INSERT INTO `transaksi` (`id`, `kategori_id`, `rekening_id`, `jumlah`, `keterangan`, `tanggal`, `created_at`, `updated_at`) VALUES
-	(1, 2, 5, 10000, 'gorengan', '2023-05-25 22:58:46', NULL, NULL),
-	(2, 3, 3, 123, 'asdf', '2023-05-25 18:59:00', '2023-05-25 16:00:43', NULL),
-	(3, 1, 2, 1000000, 'ganti body motor', '2023-05-17 12:01:00', '2023-05-25 16:01:16', NULL);
+	(1, 1, 1, 66000, 'Test Dari Seeder #1', '2023-05-27 04:26:54', '2023-05-26 21:26:54', '2023-05-26 21:26:54'),
+	(2, 2, 2, 91100, 'Test Dari Seeder #2', '2023-05-27 04:26:54', '2023-05-26 21:26:54', '2023-05-26 21:26:54'),
+	(3, 2, 2, 123, 'test update data', '2023-05-25 09:11:00', '2023-05-26 21:38:33', '2023-05-26 21:42:06');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
